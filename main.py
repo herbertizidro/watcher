@@ -3,7 +3,6 @@ import getpass
 import sqlite3
 from watcher import *
 
-#autor: Herbert Izidro
 
 def inserirDadosBD():
     #cria o banco e a tabela, valida as informações e insere
@@ -11,9 +10,7 @@ def inserirDadosBD():
         conectar = sqlite3.connect("emailUsuario.sqlite3")
         consulta = conectar.cursor()
 
-        sql = """CREATE TABLE IF NOT EXISTS email(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                emRemetente VARCHAR(50) NOT NULL, senRemetente VARCHAR(50) NOT NULL,
-                emDestinatario VARCHAR(50) NOT NULL)"""
+        sql = """CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"""
             
         print(nome)            
         emRemetente = input("\n [+] Seu e-mail: ").lower()
@@ -22,12 +19,7 @@ def inserirDadosBD():
             print("  >> E-mail inválido! <<")
             emRemetente = input(" [+] Seu e-mail: ").lower()
             verif = validarEmail(emRemetente)
-
         emRemetente = bs64(emRemetente)        
-                                    
-        senRemetente = getpass.getpass(" [+] Sua senha: ")
-        if senRemetente != "":            
-            senRemetente = bs64(senRemetente)
 
         emDestinatario = input(" [+] E-mail destinatário: ").lower()
         verif = validarEmail(emDestinatario)
@@ -35,15 +27,14 @@ def inserirDadosBD():
             print("  >> E-mail destinatário inválido! <<")
             emDestinatario = input(" [+] E-mail destinatário: ").lower()
             verif = validarEmail(emDestinatario)
-
         emDestinatario = bs64(emDestinatario)
                         
         if consulta.execute(sql):
             pass
                 
-        argumentos = (emRemetente, senRemetente, emDestinatario)
+        argumentos = (emRemetente, emDestinatario)
                 
-        sql = """INSERT INTO email(emRemetente, senRemetente, emDestinatario)VALUES (?, ?, ?)"""        
+        sql = """INSERT INTO email(emRemetente, emDestinatario)VALUES (?, ?)"""        
         if consulta.execute(sql, argumentos):
             conectar.commit()
             print("\n [!] Dados inseridos com sucesso!")
@@ -83,10 +74,10 @@ def menu():
             
         print("\n [*] E-mail remetente:", aux_emR)
         print(" [*] E-mail destinatário:", aux_emD)
-        print("\n  >> OPÇÕES:\n\n [+] 1 - Atualizar e-mail remetente\n [+] 2 - Atualizar senha remetente\n [+] 3 - Atualizar e-mail destinatário\n [+] 4 - Iniciar detecção de movimentos\n [+] 5 - Sair")
+        print("\n  >> OPÇÕES:\n\n [+] 1 - Atualizar e-mail remetente\n [+] 2 - Atualizar e-mail destinatário\n [+] 3 - Iniciar detecção de movimentos\n [+] 4 - Sair")
         opcao = input(" [+]---> ")
         
-        if opcao not in ["1", "2", "3", "4", "5"]:
+        if opcao not in ["1", "2", "3", "4"]:
             print("\n [x] Opção inválida!")
             time.sleep(2)
                 
@@ -114,21 +105,6 @@ def menu():
             time.sleep(2)
 
         elif opcao == "2":
-            limpatela()
-            print(nome)
-            novaSenRem = getpass.getpass("\n [+] Nova senha: ")
-
-            while novaSenRem == "":
-                print("  >> Senha inválida! <<")
-                novaSenRem = getpass.getpass(" [+] Nova senha: ")
-            novaSenRem = bs64(novaSenRem)
-
-            consulta.execute("UPDATE email SET senRemetente = ?", (novaSenRem,))
-            conectar.commit()
-            print("\n [!] Senha atualizada com sucesso!")
-            time.sleep(2)
-
-        elif opcao == "3":
             obterEmDes = consulta.execute("SELECT emDestinatario FROM email")
             limpatela()
             print(nome)
@@ -151,19 +127,13 @@ def menu():
             print("\n [!] E-mail destinatário atualizado com sucesso!")
             time.sleep(2)
 
-        elif opcao == "4":        
-            alerta_status = True
-            ativarAlerta = input("\n [+] Deseja ativar o alerta[1-Sim|2-Não]? ")
-            aux_senR = ""            
+        elif opcao == "3":
+            aux_senR = ""
+            alerta_status = False
+            ativarAlerta = input("\n [+] Deseja ativar o alerta[1-Sim|2-Não]? ")            
             if ativarAlerta == "1":
-                obterDados = consulta.execute("SELECT senRemetente FROM email")
-                for o in obterDados:
-                    if str(o) == "('',)":
-                        aux_senR = getpass.getpass(" [+] Informe a senha do e-mail remetente: ")
-                    else:
-                        aux_senR = bs64_decode(str(o))
-            else:
-                alerta_status = False
+                alerta_status = True
+                aux_senR = getpass.getpass(" [+] Informe a senha do e-mail remetente: ")
                         
             obterDados = consulta.execute("SELECT emRemetente FROM email")
             aux_emR = ""
@@ -186,7 +156,7 @@ def menu():
                 print("\n [x] Valor inválido informado!")
                 time.sleep(2)
             
-        elif opcao == "5":
+        elif opcao == "4":
             consulta.close()
             conectar.close()
             break
