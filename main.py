@@ -5,10 +5,6 @@ import getpass
 import sqlite3
 from watcher import *
 
-# FUNÇÕES-----------------------------------------------------------------
-
-def limpatela():
-    os.system('cls')
 
 #codifica os dados - só uma 'firula' mesmo
 def bs64(param):
@@ -24,11 +20,15 @@ def bs64Decode(param):
         
 #verifica se o e-mail está de acordo com o padrão
 def validarEmail(email):
-    padrao = re.findall("[^a-zA-Z0-9]", email)
-    if "@" in padrao and "." in padrao:
-        return 1
-    else:
-        return 0
+    aux = 0
+    while aux == 0:
+        padrao = re.findall("[^a-zA-Z0-9]", email)
+        if "@" in padrao and "." in padrao:
+            aux = 1
+            return email
+        else:            
+            print("  >> E-mail inválido! <<")
+            email = input(" [+] Informe o e-mail novamente: ").lower()  
 
 #exibe os e-mails - recebe a variável de consulta e a coluna da tabela
 def emailAtual(consulta, coluna):
@@ -81,8 +81,6 @@ def inserirDadosBD():
         Watcher.LOG(" inserirDadosBD ", erro)
         time.sleep(2)
         return False 
-    
-# FUNÇÕES-----------------------------------------------------------------
 
 
 if __name__ == "__main__":
@@ -147,4 +145,4 @@ if __name__ == "__main__":
             consulta.close()
             conectar.close()
             break
-
+            
