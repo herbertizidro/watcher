@@ -2,41 +2,14 @@
 if __name__ != "__main__":
 
     import os
-    import re
     import cv2
     import time
-    import base64
     import yagmail
     import numpy as np
     from PIL import Image
 
-
     global nome
     nome = "\n | W A T C H E R |\n"
-
-    def limpatela():    
-        os.system('cls')
-
-    #codifica os dados
-    def bs64(param):
-        cod_x = base64.b64encode(param.encode())
-        cod_x = str(cod_x).replace("b'","").replace("'","")                       
-        return cod_x
-
-    #decodifica os dados
-    def bs64Decode(param):
-        cod_x = base64.b64decode(param.encode())
-        cod_x = str(cod_x).replace("b'","").replace("'","")                      
-        return cod_x
-        
-    #verifica se o e-mail está de acordo com o padrão
-    def validarEmail(email):
-        padrao = re.findall("[^a-zA-Z0-9]", email)
-        if "@" in padrao and "." in padrao:
-            return 1
-        else:
-            return 0
-            
 
     #detecção de movimentos, envio de e-mail, gravação de vídeo e registro de erros
     class Watcher():
