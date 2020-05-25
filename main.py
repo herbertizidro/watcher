@@ -3,16 +3,40 @@ import getpass
 import sqlite3
 from watcher import *
 
+#exibe os e-mails - recebe a variável de consulta e a coluna da tabela
+def emailAtual(consulta, coluna):
+    email = consulta.execute("SELECT " + coluna + " FROM email")
+    aux = ""
+    for e in email:
+        aux = bs64Decode(str(e))
+    return aux
 
+#atualiza os e-mails - recebe as variáveis de conexão e consulta, a coluna da tabela e o tipo de e-mail(remetente ou destinatário)
+def atualizaEmail(conectar, consulta, coluna, tipo_email):
+    novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()
+    
+    verif = validarEmail(novo_email)
+    while verif == 0:
+        print("  >> E-mail inválido! <<")
+        novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()
+        verif = validarEmail(novo_email)
+    novo_email = bs64(novo_email)
+    
+    consulta.execute("UPDATE email SET " + coluna + " = ?", (novo_email,))
+    conectar.commit()
+    print("\n [!] E-mail " + tipo_email + " atualizado com sucesso!")
+    time.sleep(2)
+
+#cria o banco e a tabela, valida as informações e insere
 def inserirDadosBD():
-    #cria o banco e a tabela, valida as informações e insere
     try:
         conectar = sqlite3.connect("emailUsuario.sqlite3")
         consulta = conectar.cursor()
-
         sql = """CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"""
             
-        print(nome)            
+        limpatela()
+        print(nome)
+        
         emRemetente = input("\n [+] Seu e-mail: ").lower()
         verif = validarEmail(emRemetente)
         while verif == 0:
@@ -29,11 +53,8 @@ def inserirDadosBD():
             verif = validarEmail(emDestinatario)
         emDestinatario = bs64(emDestinatario)
                         
-        if consulta.execute(sql):
-            pass
-                
-        argumentos = (emRemetente, emDestinatario)
-                
+        if consulta.execute(sql): pass              
+        argumentos = (emRemetente, emDestinatario)                
         sql = """INSERT INTO email(emRemetente, emDestinatario)VALUES (?, ?)"""        
         if consulta.execute(sql, argumentos):
             conectar.commit()
@@ -46,14 +67,16 @@ def inserirDadosBD():
         print("\n [x] Um erro ocorreu, consulte o log.")
         Watcher.LOG(" inserirDadosBD ", erro)
         time.sleep(2)
-        return False
-        
+        return False 
 
-def menu():
+
+if __name__ == "__main__":
+
     conectar = sqlite3.connect("emailUsuario.sqlite3")
     consulta = conectar.cursor()
 
     while True:
+        
         try:
             consulta.execute("SELECT * FROM email")
         except sqlite3.OperationalError:
@@ -61,19 +84,9 @@ def menu():
                 break
             
         limpatela()
-        print(nome)
-        obterDados = consulta.execute("SELECT emRemetente FROM email")
-        aux_emR = ""
-        for o in obterDados:
-            aux_emR = bs64_decode(str(o))
-
-        obterDados = consulta.execute("SELECT emDestinatario FROM email")
-        aux_emD = ""
-        for o in obterDados:
-            aux_emD = bs64_decode(str(o))
-            
-        print("\n [*] E-mail remetente:", aux_emR)
-        print(" [*] E-mail destinatário:", aux_emD)
+        print(nome)        
+        print("\n [*] E-mail remetente:", emailAtual(consulta, "emRemetente"))
+        print(" [*] E-mail destinatário:", emailAtual(consulta, "emDestinatario"))
         print("\n  >> OPÇÕES:\n\n [+] 1 - Atualizar e-mail remetente\n [+] 2 - Atualizar e-mail destinatário\n [+] 3 - Iniciar detecção de movimentos\n [+] 4 - Sair")
         opcao = input(" [+]---> ")
         
@@ -82,74 +95,33 @@ def menu():
             time.sleep(2)
                 
         elif opcao == "1":
-            obterEmRem = consulta.execute("SELECT emRemetente FROM email")
             limpatela()
-            print(nome)
-            aux = ""
-            for o in obterEmRem:
-                aux = bs64_decode(str(o))
-
-            print("\n [*] E-mail remetente atual:", aux)
-            novoEmRem = input(" [+] Novo e-mail remetente: ").lower()
-
-            verif = validarEmail(novoEmRem)
-            while verif == 0:
-                print("  >> E-mail inválido! <<")
-                novoEmRem = input(" [+] Novo e-mail remetente: ").lower()
-                verif = validarEmail(novoEmRem)
-            novoEmRem = bs64(novoEmRem)
-
-            consulta.execute("UPDATE email SET emRemetente = ?", (novoEmRem,))
-            conectar.commit()
-            print("\n [!] E-mail remetente atualizado com sucesso!")
-            time.sleep(2)
+            print(nome) 
+            print("\n [*] E-mail remetente atual:", emailAtual(consulta, "emRemetente"))
+            atualizaEmail(conectar, consulta, "emRemetente", "remetente")
 
         elif opcao == "2":
-            obterEmDes = consulta.execute("SELECT emDestinatario FROM email")
             limpatela()
-            print(nome)
-            aux = ""
-            for o in obterEmDes:
-                aux = bs64_decode(str(o))
-
-            print("\n\n [*] E-mail destinatário atual:", aux)
-            novoEmDes = input(" [+] Novo e-mail destinatário: ").lower()
-                
-            verif = validarEmail(novoEmDes)
-            while verif == 0:
-                print("  >> E-mail inválido! <<")
-                novoEmDes = input(" [+] Novo e-mail destinatário: ").lower()
-                verif = validarEmail(novoEmDes)
-            novoEmDes = bs64(novoEmDes)
-
-            consulta.execute("UPDATE email SET emDestinatario = ?", (novoEmDes,))
-            conectar.commit()
-            print("\n [!] E-mail destinatário atualizado com sucesso!")
-            time.sleep(2)
+            print(nome) 
+            print("\n [*] E-mail destinatário atual:", emailAtual(consulta, "emDestinatario"))
+            atualizaEmail(conectar, consulta, "emDestinatario", "destinatário")
 
         elif opcao == "3":
-            aux_senR = ""
-            alerta_status = False
-            ativarAlerta = input("\n [+] Deseja ativar o alerta[1-Sim|2-Não]? ")            
-            if ativarAlerta == "1":
-                alerta_status = True
-                aux_senR = getpass.getpass(" [+] Informe a senha do e-mail remetente: ")
+            senha_remetente = ""
+            alerta = False
+            ativar_alerta = input("\n [+] Deseja ativar o alerta[1-Sim|2-Não]? ")            
+            if ativar_alerta == "1":
+                alerta = True
+                senha_remetente = getpass.getpass(" [+] Informe a senha do e-mail remetente: ")
                         
-            obterDados = consulta.execute("SELECT emRemetente FROM email")
-            aux_emR = ""
-            for o in obterDados:
-                aux_emR = bs64_decode(str(o))
-
-            obterDados = consulta.execute("SELECT emDestinatario FROM email")
-            aux_emD = ""
-            for o in obterDados:
-                aux_emD = bs64_decode(str(o))
+            email_remetente = emailAtual(consulta, "emRemetente")
+            email_destinatario = emailAtual(consulta, "emDestinatario")
 
             duracao_exec = input(" [+] Informe por quantas horas a detecção deve ser executada: ")
             try:
                 duracao_exec = 3600 * int(duracao_exec) #ex: 1hr * 5 = total em segundos
                 inicio_exec = time.time()
-                watcher = Watcher(aux_emR, aux_senR, aux_emD, alerta_status, inicio_exec, duracao_exec)
+                watcher = Watcher(email_remetente, senha_remetente, email_destinatario, alerta, inicio_exec, duracao_exec)
                 while int(time.time() - inicio_exec) < duracao_exec:
                     watcher.detectarMovimento()
             except ValueError:
@@ -161,7 +133,3 @@ def menu():
             conectar.close()
             break
 
-
-
-if __name__ == "__main__":
-        menu()
