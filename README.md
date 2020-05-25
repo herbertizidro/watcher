@@ -12,7 +12,7 @@ Se encontrar, marca com um retângulo o rosto ou corpo e salva o frame para envi
 Após isso a câmera deve gravar durante 1 minuto(esse tempo pode ser modificado na variável "cronometro_limite").
 Você define por quanto tempo esse processo será repetido.
 
-Para receber o frame por e-mail é necessário que você salve seu e-mail remetente e seu e-mail destinatário no banco de dados. A senha logicamente é opcional. O envio de e-mail também é opcional, antes de iniciar a detecção de movimentos você será questionado se deseja ativá-lo.
+Para receber o frame por e-mail é necessário que você salve seu e-mail remetente e seu e-mail destinatário no banco de dados. A senha logicamente é opcional(aliás, não é pra salvar não! a senha é pedida antes da detecção de movimentos começar). O envio de e-mail também é opcional, antes de iniciar a detecção de movimentos você será questionado se deseja ativá-lo.
 
 Então, em resumo, você salva seus e-mails no banco de dados e escolhe a opção referente à detecção de movimentos(opção 4 do menu), informando logo em seguida se quer receber o frame por e-mail e por quantas horas a detecção deve ser executada.
 
