@@ -6,7 +6,7 @@ if __name__ != "__main__":
     import re
     import cv2
     import time
-    import base64
+    import base64 #só uma 'firula', não leve a sério ...
     import yagmail
     import numpy as np
     from PIL import Image
