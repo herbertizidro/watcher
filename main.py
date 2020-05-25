@@ -1,7 +1,34 @@
+import re
 import time
+import base64
 import getpass
 import sqlite3
 from watcher import *
+
+# FUNÇÕES-----------------------------------------------------------------
+
+def limpatela():
+    os.system('cls')
+
+#codifica os dados - só uma 'firula' mesmo
+def bs64(param):
+    cod_x = base64.b64encode(param.encode())
+    cod_x = str(cod_x).replace("b'","").replace("'","")                       
+    return cod_x
+
+#decodifica os dados
+def bs64Decode(param):
+    cod_x = base64.b64decode(param.encode())
+    cod_x = str(cod_x).replace("b'","").replace("'","")                      
+    return cod_x
+        
+#verifica se o e-mail está de acordo com o padrão
+def validarEmail(email):
+    padrao = re.findall("[^a-zA-Z0-9]", email)
+    if "@" in padrao and "." in padrao:
+        return 1
+    else:
+        return 0
 
 #exibe os e-mails - recebe a variável de consulta e a coluna da tabela
 def emailAtual(consulta, coluna):
@@ -13,21 +40,15 @@ def emailAtual(consulta, coluna):
 
 #atualiza os e-mails - recebe as variáveis de conexão e consulta, a coluna da tabela e o tipo de e-mail(remetente ou destinatário)
 def atualizaEmail(conectar, consulta, coluna, tipo_email):
-    novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()
-    
+    novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()    
     verif = validarEmail(novo_email)
-    while verif == 0:
-        print("  >> E-mail inválido! <<")
-        novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()
-        verif = validarEmail(novo_email)
-    novo_email = bs64(novo_email)
-    
+    novo_email = bs64(verif)    
     consulta.execute("UPDATE email SET " + coluna + " = ?", (novo_email,))
     conectar.commit()
     print("\n [!] E-mail " + tipo_email + " atualizado com sucesso!")
     time.sleep(2)
 
-#cria o banco e a tabela, valida as informações e insere
+#cria o banco, a tabela e guarda os dados
 def inserirDadosBD():
     try:
         conectar = sqlite3.connect("emailUsuario.sqlite3")
@@ -37,21 +58,13 @@ def inserirDadosBD():
         limpatela()
         print(nome)
         
-        emRemetente = input("\n [+] Seu e-mail: ").lower()
+        emRemetente = input("\n [+] Seu e-mail: ").lower()    
         verif = validarEmail(emRemetente)
-        while verif == 0:
-            print("  >> E-mail inválido! <<")
-            emRemetente = input(" [+] Seu e-mail: ").lower()
-            verif = validarEmail(emRemetente)
-        emRemetente = bs64(emRemetente)        
+        emRemetente = bs64(verif)        
 
         emDestinatario = input(" [+] E-mail destinatário: ").lower()
         verif = validarEmail(emDestinatario)
-        while verif == 0:
-            print("  >> E-mail destinatário inválido! <<")
-            emDestinatario = input(" [+] E-mail destinatário: ").lower()
-            verif = validarEmail(emDestinatario)
-        emDestinatario = bs64(emDestinatario)
+        emDestinatario = bs64(verif)
                         
         if consulta.execute(sql): pass              
         argumentos = (emRemetente, emDestinatario)                
@@ -68,6 +81,8 @@ def inserirDadosBD():
         Watcher.LOG(" inserirDadosBD ", erro)
         time.sleep(2)
         return False 
+    
+# FUNÇÕES-----------------------------------------------------------------
 
 
 if __name__ == "__main__":
