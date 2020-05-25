@@ -1,5 +1,4 @@
 
-
 if __name__ != "__main__":
 
     import os
@@ -11,7 +10,6 @@ if __name__ != "__main__":
     import numpy as np
     from PIL import Image
 
-    #autor: Herbert Izidro
 
     global nome
     nome = "\n | W A T C H E R |\n"
@@ -26,7 +24,7 @@ if __name__ != "__main__":
         return cod_x
 
     #decodifica os dados
-    def bs64_decode(param):
+    def bs64Decode(param):
         cod_x = base64.b64decode(param.encode())
         cod_x = str(cod_x).replace("b'","").replace("'","")                      
         return cod_x
