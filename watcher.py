@@ -6,7 +6,7 @@ if __name__ != "__main__":
     import re
     import cv2
     import time
-    import base64 #só uma 'firula', não leve a sério ...
+    import base64
     import yagmail
     import numpy as np
     from PIL import Image
@@ -98,8 +98,8 @@ if __name__ != "__main__":
                 while int(time.time() - self.inicio_exec) < self.duracao_exec:
                     ret, frame = cap.read()
                     cont_frame += 1	
-                    frame_redimensionado = cv2.resize(frame, (0, 0), fx = 0.90, fy = 0.90)
-                    masc = sub_fundo.apply(frame_redimensionado)
+                    redimensiona_frame = cv2.resize(frame, (0, 0), fx = 0.90, fy = 0.90)
+                    masc = sub_fundo.apply(redimensiona_frame)
                     cont_pixel = np.count_nonzero(masc)
                     # cont_pixel > 10 - determina quantos pixels são considerados "movimento"
                     if(cont_frame > 1 and cont_pixel > 50):
@@ -148,4 +148,3 @@ if __name__ != "__main__":
                     pass
                 else:
                     Watcher.LOG(" Watcher.detectarMovimentos ", erro)
-
