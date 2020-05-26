@@ -39,19 +39,19 @@ def emailAtual(consulta, coluna):
     return aux
 
 #atualiza os e-mails - recebe as variáveis de conexão e consulta, a coluna da tabela e o tipo de e-mail(remetente ou destinatário)
-def atualizaEmail(conectar, consulta, coluna, tipo_email):
+def atualizaEmail(conexao, consulta, coluna, tipo_email):
     novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()    
     verif = validarEmail(novo_email)
     novo_email = bs64(verif)    
     consulta.execute("UPDATE email SET " + coluna + " = ?", (novo_email,))
-    conectar.commit()
+    conexao.commit()
     print("\n [!] E-mail " + tipo_email + " atualizado com sucesso!")
     time.sleep(2)
 
 #cria o banco, a tabela e guarda os dados
 def inserirDadosBD():
     try:
-        conectar = sqlite3.connect("emailUsuario.sqlite3")
+        conexao = sqlite3.connect("emailUsuario.sqlite3")
         consulta = conectar.cursor()
         sql = """CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"""
             
@@ -70,11 +70,11 @@ def inserirDadosBD():
         argumentos = (emRemetente, emDestinatario)                
         sql = """INSERT INTO email(emRemetente, emDestinatario)VALUES (?, ?)"""        
         if consulta.execute(sql, argumentos):
-            conectar.commit()
+            conexao.commit()
             print("\n [!] Dados inseridos com sucesso!")
             time.sleep(2)
             consulta.close()
-            conectar.close()
+            conexao.close()
 
     except Exception as erro:
         print("\n [x] Um erro ocorreu, consulte o log.")
@@ -85,7 +85,7 @@ def inserirDadosBD():
 
 if __name__ == "__main__":
 
-    conectar = sqlite3.connect("emailUsuario.sqlite3")
+    conexao = sqlite3.connect("emailUsuario.sqlite3")
     consulta = conectar.cursor()
 
     while True:
@@ -111,13 +111,13 @@ if __name__ == "__main__":
             limpatela()
             print(nome) 
             print("\n [*] E-mail remetente atual:", emailAtual(consulta, "emRemetente"))
-            atualizaEmail(conectar, consulta, "emRemetente", "remetente")
+            atualizaEmail(conexao, consulta, "emRemetente", "remetente")
 
         elif opcao == "2":
             limpatela()
             print(nome) 
             print("\n [*] E-mail destinatário atual:", emailAtual(consulta, "emDestinatario"))
-            atualizaEmail(conectar, consulta, "emDestinatario", "destinatário")
+            atualizaEmail(conexao, consulta, "emDestinatario", "destinatário")
 
         elif opcao == "3":
             senha_remetente = ""
@@ -142,6 +142,6 @@ if __name__ == "__main__":
             
         elif opcao == "4":
             consulta.close()
-            conectar.close()
+            conexao.close()
             break
             
