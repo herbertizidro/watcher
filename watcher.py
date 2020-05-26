@@ -34,9 +34,9 @@ if __name__ != "__main__":
         #envia os e-mails
         def __emitirAlerta(self):
             try:
-                anexo = [yagmail.inline("./amostra.jpg")]
+                deteccao_img = [yagmail.inline("./amostra.jpg")]
                 yag = yagmail.SMTP(self.__email_remetente, self.__senha_remetente)
-                yag.send(self.__email_destinatario, "WATCHER - Frontal ou corpo detectado", anexo)
+                yag.send(self.__email_destinatario, "WATCHER - Frontal ou corpo detectado", deteccao_img)
                 os.remove("./amostra.jpg")
             except Exception as erro:
                 Watcher.LOG(" Watcher.emitirAlerta ", erro)
