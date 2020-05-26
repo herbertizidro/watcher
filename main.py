@@ -121,9 +121,8 @@ if __name__ == "__main__":
 
         elif opcao == "3":
             senha_remetente = ""
-            alerta = False
-            ativar_alerta = input("\n [+] Deseja ativar o alerta[1-Sim|2-Não]? ")            
-            if ativar_alerta == "1":
+            alerta = False          
+            if input("\n [+] Deseja ativar o alerta[1-Sim|2-Não]? ") == "1":
                 alerta = True
                 senha_remetente = getpass.getpass(" [+] Informe a senha do e-mail remetente: ")
                         
