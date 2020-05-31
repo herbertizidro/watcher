@@ -53,7 +53,7 @@ def inserirDadosBD():
     try:
         conexao = sqlite3.connect("emailUsuario.sqlite3")
         consulta = conectar.cursor()
-        sql = """CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"""
+        sql = "CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"
             
         limpatela()
         print(nome)
