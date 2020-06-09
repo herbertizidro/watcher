@@ -7,19 +7,19 @@ from watcher import *
 
 
 #codifica os dados - só uma 'firula' mesmo
-def bs64(param):
+def bs64(param) -> str:
     cod_x = base64.b64encode(param.encode())
     cod_x = str(cod_x).replace("b'","").replace("'","")                       
     return cod_x
 
 #decodifica os dados
-def bs64Decode(param):
+def bs64Decode(param) -> str:
     cod_x = base64.b64decode(param.encode())
     cod_x = str(cod_x).replace("b'","").replace("'","")                      
     return cod_x
         
 #verifica se o e-mail está de acordo com o padrão
-def validarEmail(email):
+def validarEmail(email) -> str:
     aux = 0
     while aux == 0:
         padrao = re.findall("[^a-zA-Z0-9]", email)
@@ -31,7 +31,7 @@ def validarEmail(email):
             email = input(" [+] Informe o e-mail novamente: ").lower()  
 
 #exibe os e-mails - recebe a variável de consulta e a coluna da tabela
-def emailAtual(consulta, coluna):
+def emailAtual(consulta, coluna) -> str:
     email = consulta.execute("SELECT " + coluna + " FROM email")
     aux = ""
     for e in email:
