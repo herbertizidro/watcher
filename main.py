@@ -102,12 +102,8 @@ if __name__ == "__main__":
         print(" [*] E-mail destinatário:", emailAtual(consulta, "emDestinatario"))
         print("\n  >> OPÇÕES:\n\n [+] 1 - Atualizar e-mail remetente\n [+] 2 - Atualizar e-mail destinatário\n [+] 3 - Iniciar detecção de movimentos\n [+] 4 - Sair")
         opcao = input(" [+]---> ")
-        
-        if opcao not in ["1", "2", "3", "4"]:
-            print("\n [x] Opção inválida!")
-            time.sleep(2)
                 
-        elif opcao == "1":
+        if opcao == "1":
             limpatela()
             print(nome) 
             print("\n [*] E-mail remetente atual:", emailAtual(consulta, "emRemetente"))
@@ -145,3 +141,6 @@ if __name__ == "__main__":
             conexao.close()
             break
             
+        else:
+            print("\n [x] Opção inválida!")
+            time.sleep(2)
