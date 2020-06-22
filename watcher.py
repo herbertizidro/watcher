@@ -72,8 +72,8 @@ if __name__ != "__main__":
                 while int(time.time() - self.inicio_exec) < self.duracao_exec:
                     ret, frame = cap.read()
                     cont_frame += 1	
-                    redimensiona_frame = cv2.resize(frame, (0, 0), fx = 0.90, fy = 0.90)
-                    masc = sub_fundo.apply(redimensiona_frame)
+                    frame_redimensionado = cv2.resize(frame, (0, 0), fx = 0.90, fy = 0.90)
+                    masc = sub_fundo.apply(frame_redimensionado)
                     cont_pixel = np.count_nonzero(masc)
                     # cont_pixel > 10 - determina quantos pixels são considerados "movimento"
                     if(cont_frame > 1 and cont_pixel > 50):
