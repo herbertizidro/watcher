@@ -1,6 +1,7 @@
 import re
 import time
 import base64
+import ctypes
 import getpass
 import sqlite3
 from watcher import *
@@ -52,7 +53,7 @@ def atualizaEmail(conexao, consulta, coluna, tipo_email):
 def inserirDadosBD():
     try:
         conexao = sqlite3.connect("emailUsuario.sqlite3")
-        consulta = conectar.cursor()
+        consulta = conexao.cursor()
         sql = "CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"
             
         limpatela()
@@ -86,7 +87,7 @@ def inserirDadosBD():
 if __name__ == "__main__":
 
     conexao = sqlite3.connect("emailUsuario.sqlite3")
-    consulta = conectar.cursor()
+    consulta = conexao.cursor()
 
     while True:
         
@@ -124,9 +125,12 @@ if __name__ == "__main__":
                         
             email_remetente = emailAtual(consulta, "emRemetente")
             email_destinatario = emailAtual(consulta, "emDestinatario")
-
+            
             duracao_exec = input(" [+] Informe por quantas horas a detecção deve ser executada: ")
             try:
+                if input(" [+] Deseja minimizar a janela agora[1-Sim|2-Não]? ") == "1":
+                    ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 6) #6 -> SW_MINIMIZE
+                    
                 duracao_exec = 3600 * int(duracao_exec) #ex: 1hr * 5 = total em segundos
                 inicio_exec = time.time()
                 watcher = Watcher(email_remetente, senha_remetente, email_destinatario, alerta, inicio_exec, duracao_exec)
@@ -144,3 +148,4 @@ if __name__ == "__main__":
         else:
             print("\n [x] Opção inválida!")
             time.sleep(2)
+
