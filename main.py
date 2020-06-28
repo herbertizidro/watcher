@@ -1,7 +1,6 @@
 import re
 import time
 import base64
-import ctypes
 import getpass
 import sqlite3
 from watcher import *
