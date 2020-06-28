@@ -128,19 +128,19 @@ if __name__ == "__main__":
             
             duracao_exec = input(" [+] Informe por quantas horas a detecção deve ser executada: ")
             try:
-                if input(" [+] Deseja minimizar a janela agora[1-Sim|2-Não]? ") == "1":
-                    ctypes.windll.user32.ShowWindow( ctypes.windll.kernel32.GetConsoleWindow(), 6) #6 -> SW_MINIMIZE
-                    
                 duracao_exec = 3600 * int(duracao_exec) #ex: 1hr * 5 = total em segundos
                 inicio_exec = time.time()
                 watcher = Watcher(email_remetente, senha_remetente, email_destinatario, alerta, inicio_exec, duracao_exec)
                 while int(time.time() - inicio_exec) < duracao_exec:
                     watcher.detectarMovimento()
+                limpatela()
+                break
             except ValueError:
                 print("\n [x] Valor inválido informado!")
                 time.sleep(2)
             
         elif opcao == "4":
+            limpatela()
             consulta.close()
             conexao.close()
             break
