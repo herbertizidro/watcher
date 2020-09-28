@@ -1,89 +1,14 @@
-import re
-import time
-import base64
-import getpass
-import sqlite3
-from watcher import *
-
-
-#codifica os dados - só uma 'firula' mesmo
-def bs64(param) -> str:
-    cod_x = base64.b64encode(param.encode())
-    cod_x = str(cod_x).replace("b'","").replace("'","")                       
-    return cod_x
-
-#decodifica os dados
-def bs64Decode(param) -> str:
-    cod_x = base64.b64decode(param.encode())
-    cod_x = str(cod_x).replace("b'","").replace("'","")                      
-    return cod_x
-        
-#verifica se o e-mail está de acordo com o padrão
-def validarEmail(email) -> str:
-    aux = 0
-    while aux == 0:
-        padrao = re.findall("[^a-zA-Z0-9]", email)
-        if "@" in padrao and "." in padrao:
-            aux = 1
-            return email
-        else:            
-            print("  >> E-mail inválido! <<")
-            email = input(" [+] Informe o e-mail novamente: ").lower()  
-
-#exibe os e-mails - recebe a variável de consulta e a coluna da tabela
-def emailAtual(consulta, coluna) -> str:
-    email = consulta.execute("SELECT " + coluna + " FROM email")
-    aux = ""
-    for e in email:
-        aux = bs64Decode(str(e))
-    return aux
-
-#atualiza os e-mails - recebe as variáveis de conexão e consulta, a coluna da tabela e o tipo de e-mail(remetente ou destinatário)
-def atualizaEmail(conexao, consulta, coluna, tipo_email):
-    novo_email = input(" [+] Novo e-mail " + tipo_email + ": ").lower()    
-    verif = validarEmail(novo_email)
-    novo_email = bs64(verif)    
-    consulta.execute("UPDATE email SET " + coluna + " = ?", (novo_email,))
-    conexao.commit()
-    print("\n [!] E-mail " + tipo_email + " atualizado com sucesso!")
-    time.sleep(2)
-
-#cria o banco, a tabela e guarda os dados
-def inserirDadosBD():
-    try:
-        conexao = sqlite3.connect("emailUsuario.sqlite3")
-        consulta = conexao.cursor()
-        sql = "CREATE TABLE IF NOT EXISTS email(emRemetente VARCHAR(50) NOT NULL, emDestinatario VARCHAR(50) NOT NULL)"
-            
-        limpatela()
-        print(nome)
-        
-        emRemetente = input("\n [+] Seu e-mail: ").lower()    
-        verif = validarEmail(emRemetente)
-        emRemetente = bs64(verif)        
-
-        emDestinatario = input(" [+] E-mail destinatário: ").lower()
-        verif = validarEmail(emDestinatario)
-        emDestinatario = bs64(verif)
-                        
-        if consulta.execute(sql): pass              
-        argumentos = (emRemetente, emDestinatario)                
-        sql = """INSERT INTO email(emRemetente, emDestinatario)VALUES (?, ?)"""        
-        if consulta.execute(sql, argumentos):
-            conexao.commit()
-            print("\n [!] Dados inseridos com sucesso!")
-            time.sleep(2)
-            consulta.close()
-            conexao.close()
-
-    except Exception as erro:
-        print("\n [x] Um erro ocorreu, consulte o log.")
-        Watcher.LOG(" inserirDadosBD ", erro)
-        time.sleep(2)
-        return False 
-
 
 if __name__ == "__main__":
+    
+    import re
+    import time
+    import base64
+    import getpass
+    import sqlite3
+    from funcoes import *
+    from cria_db import *
+    from watcher import *
 
     conexao = sqlite3.connect("emailUsuario.sqlite3")
     consulta = conexao.cursor()
