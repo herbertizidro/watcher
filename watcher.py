@@ -7,7 +7,7 @@ if __name__ != "__main__":
     import yagmail
     import numpy as np
     from PIL import Image
-
+   
     global nome
     nome = "\n | W A T C H E R |\n"
 
@@ -122,3 +122,5 @@ if __name__ != "__main__":
                     pass
                 else:
                     Watcher.LOG(" Watcher.detectarMovimentos ", erro)
+
+
