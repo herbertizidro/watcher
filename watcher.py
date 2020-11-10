@@ -14,7 +14,7 @@ if __name__ != "__main__":
     def limpatela():
         os.system('cls')
 
-    #detecção de movimentos, envio de e-mail, gravação de vídeo e registro de erros
+    #detecção de movimentos, envio de e-mail, captura de vídeo e registro de erros
     class Watcher():
         #inicialização dos atributos
         def __init__(self, email, senha, emailD, alerta_status, inicio_exec, duracao_exec):
@@ -26,12 +26,12 @@ if __name__ != "__main__":
             self.duracao_exec = duracao_exec
 
         @staticmethod
-        def LOG(local, erro):  #gera o log com os erros
+        def LOG(local, erro):  #gera o log com os erros para facilitar a manutenção
             data_hora = time.strftime('%d/%m/%Y - %H:%M:%S')
             with open("logErros.txt", "a") as arq:
                 arq.write("\n\n" + data_hora + local + str(erro))
                 
-        #envia os e-mails
+        #envia uma amostra(imagem) da detecção por e-mail
         def __emitirAlerta(self):
             try:
                 deteccao_img = [yagmail.inline("./amostra.jpg")]
@@ -42,7 +42,7 @@ if __name__ != "__main__":
                 Watcher.LOG(" Watcher.emitirAlerta ", erro)
 
         
-        def __gravarVideo(self): #grava vídeos curtos
+        def __gravarVideo(self): #grava vídeos de 1 minuto
             try:
                 print(" [*] Gravando ...")
                 cronômetro_limite = 60 #60 segundos - modificar aqui para aumentar ou diminuir
@@ -60,7 +60,7 @@ if __name__ != "__main__":
             except Exception as erro:
                 Watcher.LOG(" Watcher.gravarVideo ", erro)
 
-        #método responsável por detectar movimentos e identificar frontal ou corpo no frame
+        #detecta os movimentos e identifica o frontal ou corpo no frame
         def detectarMovimento(self):
             try:
                 limpatela()
@@ -97,7 +97,7 @@ if __name__ != "__main__":
                             print(" [*] Frontal detectado!")
                             if self.__alerta_status == True:
                                 for(x, y, w, h) in frontal:
-                                    cv2.rectangle(frame, (x,y), (x+w, y+h), cor, espessura_linha) #desenha o retangulo para o rosto encontrado
+                                    cv2.rectangle(frame, (x,y), (x+w, y+h), cor, espessura_linha) #desenha o retangulo no rosto encontrado
                                 cv2.putText(frame, "frontal", coordenadas, fonte, escala_fonte, cor, espessura_linha)
                                 cv2.imwrite("amostra.jpg", frame)
                                 self.__emitirAlerta()
@@ -108,7 +108,7 @@ if __name__ != "__main__":
                             print(" [*] Corpo detectado!")
                             if self.__alerta_status == True:
                                 for(x, y, w, h) in corpo_sup:
-                                    cv2.rectangle(frame, (x,y), (x+w, y+h), cor, espessura_linha) #desenha o retangulo para o corpo encontrado
+                                    cv2.rectangle(frame, (x,y), (x+w, y+h), cor, espessura_linha) #desenha o retangulo no corpo encontrado
                                 cv2.putText(frame, "corpo(superior)", coordenadas, fonte, escala_fonte, cor, espessura_linha)
                                 cv2.imwrite("amostra.jpg", frame)
                                 self.__emitirAlerta()
