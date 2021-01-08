@@ -7,6 +7,8 @@ if __name__ != "__main__":
     import yagmail
     import numpy as np
     from PIL import Image
+    
+    from funcoes import limpatela
    
     global nome
     nome = "\n | W A T C H E R |\n"
