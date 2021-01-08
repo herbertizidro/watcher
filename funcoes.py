@@ -1,8 +1,13 @@
 if __name__ != "__main__":
 
     import re
+    import os
     import time
     import base64 
+    
+    
+    def limpatela():
+        os.system('cls')
     
     #codifica os dados - só uma 'firula' mesmo
     def bs64(param) -> str:
