@@ -11,9 +11,6 @@ if __name__ != "__main__":
     global nome
     nome = "\n | W A T C H E R |\n"
 
-    def limpatela():
-        os.system('cls')
-
     #detecção de movimentos, envio de e-mail, captura de vídeo e registro de erros
     class Watcher():
         #inicialização dos atributos
