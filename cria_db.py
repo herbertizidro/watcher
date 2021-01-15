@@ -2,8 +2,8 @@ if __name__ != "__main__":
 
     import time
     import sqlite3
-    from watcher import nome, limpatela, Watcher
-    from funcoes import validarEmail, bs64
+    from watcher import nome, Watcher
+    from funcoes import validarEmail, limpatela, bs64
 
     #cria o banco, a tabela e guarda os dados
     def inserirDadosBD():
