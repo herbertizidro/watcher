@@ -18,7 +18,8 @@ if __name__ == "__main__":
         try:
             consulta.execute("SELECT * FROM email")
         except sqlite3.OperationalError:
-            break
+            if inserirDadosBD() == False:
+                break
             
         limpatela()
         print(nome)        
