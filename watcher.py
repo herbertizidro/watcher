@@ -44,13 +44,13 @@ if __name__ != "__main__":
         def __gravarVideo(self): #grava vídeos de 1 minuto
             try:
                 print(" [*] Gravando ...")
-                cronômetro_limite = 60 #60 segundos - modificar aqui para aumentar ou diminuir
+                cronometro_limite = 60 #60 segundos - modificar aqui para aumentar ou diminuir
                 cap = cv2.VideoCapture(0)
                 fourcc = cv2.VideoWriter_fourcc(*"XVID")
                 nome_video = time.strftime("%d%m%Y%H%M%S") + ".avi"
                 video = cv2.VideoWriter(nome_video, fourcc, 20.0, (640,480))
-                cronômetro_início = time.time()
-                while int(time.time() - cronômetro_início) < cronômetro_limite:
+                cronometro_inicio = time.time()
+                while int(time.time() - cronometro_inicio) < cronometro_limite:
                     ret, frame = cap.read()
                     if ret == True:
                         video.write(frame)
