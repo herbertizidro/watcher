@@ -36,10 +36,8 @@ if __name__ != "__main__":
     #exibe os e-mails - recebe a variável de consulta e a coluna da tabela
     def emailAtual(consulta, coluna) -> str:
         email = consulta.execute("SELECT " + coluna + " FROM email")
-        aux = ""
-        for e in email:
-            aux = bs64Decode(str(e))
-        return aux
+        email = bs64Decode(str(email))
+        return email
 
     #atualiza os e-mails - recebe as variáveis de conexão e consulta, a coluna da tabela e o tipo de e-mail(remetente ou destinatário)
     def atualizaEmail(conexao, consulta, coluna, tipo_email):
